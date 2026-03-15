@@ -133,61 +133,63 @@ class AddEditDialog(ctk.CTkToplevel):
         )
         cancel_btn.pack(side="left")
 
-        # 表单区域（玻璃风格）
+        # 表单区域（玻璃风格，可滚动以免「重复/提前提醒」被裁掉）
         form_frame = ctk.CTkFrame(self, **gkw)
         form_frame.pack(fill="both", expand=True, padx=24, pady=(20, 16))
+        scroll = ctk.CTkScrollableFrame(form_frame, fg_color="transparent")
+        scroll.pack(fill="both", expand=True)
 
         # 标题
-        ctk.CTkLabel(form_frame, text="标题（必填）", font=ctk.CTkFont(size=13), text_color=c["text"]).pack(anchor="w", pady=(0, 4))
-        self.entry_title = ctk.CTkEntry(form_frame, placeholder_text="输入日程标题", height=36, fg_color=c["surface"], border_color=c["glass_border"], text_color=c["text"])
+        ctk.CTkLabel(scroll, text="标题（必填）", font=ctk.CTkFont(size=13), text_color=c["text"]).pack(anchor="w", pady=(0, 4))
+        self.entry_title = ctk.CTkEntry(scroll, placeholder_text="输入日程标题", height=36, fg_color=c["surface"], border_color=c["glass_border"], text_color=c["text"])
         self.entry_title.pack(fill="x", pady=(0, 12))
 
         # 分组（可选）
-        ctk.CTkLabel(form_frame, text="分组（可选）", font=ctk.CTkFont(size=13), text_color=c["text"]).pack(anchor="w", pady=(0, 4))
-        self.entry_group = ctk.CTkEntry(form_frame, placeholder_text="如：工作、生活，留空为无分组", height=36, fg_color=c["surface"], border_color=c["glass_border"], text_color=c["text"])
+        ctk.CTkLabel(scroll, text="分组（可选）", font=ctk.CTkFont(size=13), text_color=c["text"]).pack(anchor="w", pady=(0, 4))
+        self.entry_group = ctk.CTkEntry(scroll, placeholder_text="如：工作、生活，留空为无分组", height=36, fg_color=c["surface"], border_color=c["glass_border"], text_color=c["text"])
         self.entry_group.pack(fill="x", pady=(0, 12))
 
         # 备注
-        ctk.CTkLabel(form_frame, text="备注（可选）", font=ctk.CTkFont(size=13), text_color=c["text"]).pack(anchor="w", pady=(0, 4))
-        self.entry_note = ctk.CTkEntry(form_frame, placeholder_text="备注说明", height=36, fg_color=c["surface"], border_color=c["glass_border"], text_color=c["text"])
+        ctk.CTkLabel(scroll, text="备注（可选）", font=ctk.CTkFont(size=13), text_color=c["text"]).pack(anchor="w", pady=(0, 4))
+        self.entry_note = ctk.CTkEntry(scroll, placeholder_text="备注说明", height=36, fg_color=c["surface"], border_color=c["glass_border"], text_color=c["text"])
         self.entry_note.pack(fill="x", pady=(0, 12))
 
         # 日期：输入框 + 快捷（今天/明天/后天），带格式提示与校验提示
-        ctk.CTkLabel(form_frame, text="日期", font=ctk.CTkFont(size=13), text_color=c["text"]).pack(anchor="w", pady=(0, 4))
-        self.entry_date = ctk.CTkEntry(form_frame, placeholder_text="例如 2026-03-17", height=36, fg_color=c["surface"], border_color=c["glass_border"], text_color=c["text"])
+        ctk.CTkLabel(scroll, text="日期", font=ctk.CTkFont(size=13), text_color=c["text"]).pack(anchor="w", pady=(0, 4))
+        self.entry_date = ctk.CTkEntry(scroll, placeholder_text="例如 2026-03-17", height=36, fg_color=c["surface"], border_color=c["glass_border"], text_color=c["text"])
         self.entry_date.pack(fill="x", pady=(0, 2))
         self.entry_date.bind("<FocusOut>", lambda e: self._on_date_entry_blur())
-        date_btn_row = ctk.CTkFrame(form_frame, fg_color="transparent")
+        date_btn_row = ctk.CTkFrame(scroll, fg_color="transparent")
         date_btn_row.pack(fill="x", pady=(4, 0))
         for label, delta in [("今天", 0), ("明天", 1), ("后天", 2)]:
             btn = ctk.CTkButton(date_btn_row, text=label, width=70, height=28, fg_color=c["glass"], text_color=c["text"], command=lambda d=delta: self._set_quick_date(d))
             btn.pack(side="left", padx=(0, 8))
-        self.label_date_error = ctk.CTkLabel(form_frame, text="", font=ctk.CTkFont(size=12), text_color="#e57373", anchor="w")
+        self.label_date_error = ctk.CTkLabel(scroll, text="", font=ctk.CTkFont(size=12), text_color="#e57373", anchor="w")
         self.label_date_error.pack(anchor="w", pady=(2, 0))
-        ctk.CTkLabel(form_frame, text="格式：YYYY-MM-DD", font=ctk.CTkFont(size=11), text_color=c["text_secondary"], anchor="w").pack(anchor="w", pady=(0, 12))
+        ctk.CTkLabel(scroll, text="格式：YYYY-MM-DD", font=ctk.CTkFont(size=11), text_color=c["text_secondary"], anchor="w").pack(anchor="w", pady=(0, 12))
 
         # 时间：输入框，带格式提示与校验提示
-        ctk.CTkLabel(form_frame, text="时间", font=ctk.CTkFont(size=13), text_color=c["text"]).pack(anchor="w", pady=(0, 4))
-        self.entry_time = ctk.CTkEntry(form_frame, placeholder_text="例如 14:30 或 14:30:00", height=36, fg_color=c["surface"], border_color=c["glass_border"], text_color=c["text"])
+        ctk.CTkLabel(scroll, text="时间", font=ctk.CTkFont(size=13), text_color=c["text"]).pack(anchor="w", pady=(0, 4))
+        self.entry_time = ctk.CTkEntry(scroll, placeholder_text="例如 14:30 或 14:30:00", height=36, fg_color=c["surface"], border_color=c["glass_border"], text_color=c["text"])
         self.entry_time.pack(fill="x", pady=(0, 2))
         self.entry_time.bind("<FocusOut>", lambda e: self._on_time_entry_blur())
-        self.label_time_error = ctk.CTkLabel(form_frame, text="", font=ctk.CTkFont(size=12), text_color="#e57373", anchor="w")
+        self.label_time_error = ctk.CTkLabel(scroll, text="", font=ctk.CTkFont(size=12), text_color="#e57373", anchor="w")
         self.label_time_error.pack(anchor="w", pady=(2, 0))
-        ctk.CTkLabel(form_frame, text="格式：HH:MM 或 HH:MM:SS", font=ctk.CTkFont(size=11), text_color=c["text_secondary"], anchor="w").pack(anchor="w", pady=(0, 12))
+        ctk.CTkLabel(scroll, text="格式：HH:MM 或 HH:MM:SS", font=ctk.CTkFont(size=11), text_color=c["text_secondary"], anchor="w").pack(anchor="w", pady=(0, 12))
 
-        # 重复
-        ctk.CTkLabel(form_frame, text="重复", font=ctk.CTkFont(size=13), text_color=c["text"]).pack(anchor="w", pady=(0, 4))
+        # 重复（仅一次 / 每天 / 每周 / 工作日 / 周末）
+        ctk.CTkLabel(scroll, text="重复", font=ctk.CTkFont(size=13), text_color=c["text"]).pack(anchor="w", pady=(0, 4))
         self.combo_repeat = ctk.CTkComboBox(
-            form_frame, values=[o[0] for o in REPEAT_OPTIONS], height=36,
+            scroll, values=[o[0] for o in REPEAT_OPTIONS], height=36,
             fg_color=c["surface"], button_color=c["glass"], button_hover_color=c["glass_border"], text_color=c["text"],
         )
         self.combo_repeat.pack(fill="x", pady=(0, 12))
 
         # 提前提醒
-        ctk.CTkLabel(form_frame, text="提前提醒", font=ctk.CTkFont(size=13), text_color=c["text"]).pack(anchor="w", pady=(0, 4))
+        ctk.CTkLabel(scroll, text="提前提醒", font=ctk.CTkFont(size=13), text_color=c["text"]).pack(anchor="w", pady=(0, 4))
         advance_labels = [_format_advance(m) for m in ADVANCE_MINUTES_OPTIONS]
         self.combo_advance = ctk.CTkComboBox(
-            form_frame, values=advance_labels, height=36,
+            scroll, values=advance_labels, height=36,
             fg_color=c["surface"], button_color=c["glass"], button_hover_color=c["glass_border"], text_color=c["text"],
         )
         self.combo_advance.pack(fill="x", pady=(0, 12))
@@ -195,7 +197,7 @@ class AddEditDialog(ctk.CTkToplevel):
         # 是否启用提醒
         self.var_remind = ctk.BooleanVar(value=True)
         self.check_remind = ctk.CTkCheckBox(
-            form_frame, text="启用弹窗提醒", variable=self.var_remind,
+            scroll, text="启用弹窗提醒", variable=self.var_remind,
             fg_color=c["accent"], text_color=c["text"],
         )
         self.check_remind.pack(anchor="w", pady=(0, 8))
